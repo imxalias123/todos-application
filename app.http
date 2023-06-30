@@ -15,34 +15,33 @@ GET http://localhost:3000/todos/todos/?search_q=Play
 GET http://localhost:3000/todos/2/
 
 ###
-POST http://localhost:3000/register
-Content-Type: application/json 
-
-{
-  "username": "adam_richard",
-  "name": "Adam Richard",
-  "password": "richard_567",
-  "gender": "male",
-  "location": "Detroit"
-}  
-
-
-###
-POST http://localhost:3000/login
-Content-Type: application/json 
-
-{
-  "username": "adam_richard",
-  "password": "richard_567"
-}
-
-###
-PUT http://localhost:3000/change-password
+POST http://localhost:3000/todos
 Content-Type: application/json
 
 {
-  "username": "adam_richard",
-  "oldPassword": "richard_567",
-  "newPassword": "richard@123"
+  "id": 10,
+  "todo": "Finalize event theme",
+  "priority": "LOW",
+  "status": "TO DO"
 }
+###
+PUT http://localhost:3000/todos/2/
+Content-Type: application/json 
+
+{ "status": "DONE" }
+
+ ###
+PUT http://localhost:3000/todos/3/
+Content-Type: application/json 
+
+{ "priority": "HIGH" }
+
+###
+PUT http://localhost:3000/todos/4/
+Content-Type: application/json 
+
+{ "todo": "Some task" }
+
+###
+DELETE http://localhost:3000/todos/3/
 

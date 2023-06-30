@@ -38,7 +38,7 @@ const hasPriorityProperty = (requestQuery) => {
 app.get("/todos/", async (request, response) => {
   let data = null;
   let getTodoQuery = "";
-  const { search_query = "", priority, status } = request.query;
+  const { search_q = "", priority, status } = request.query;
 
   switch (true) {
     case hasStatusAndPriorityProperty(request.query):
@@ -90,9 +90,8 @@ app.post("/todos/", async (request, response) => {
 
 app.put("/todos/:todoId/", async (request, response) => {
   const { todoId } = request.params;
-  const requestBody = request.body;
   let updateColumn = "";
-
+  const requestBody = request.body;
   switch (true) {
     case requestBody.status !== undefined:
       updateColumn = "Status";
@@ -104,25 +103,38 @@ app.put("/todos/:todoId/", async (request, response) => {
       updateColumn = "Todo";
       break;
   }
-
   const previousTodoQuery = `
-  SELECT * FROM todo WHERE id = ${todoId};`;
-  const previousTodo = await db.get(previousTodoQuery);
+    SELECT
+      *
+    FROM
+      todo
+    WHERE 
+      id = ${todoId};`;
+  const previousTodo = await database.get(previousTodoQuery);
+
+  const {
+    todo = previousTodo.todo,
+    priority = previousTodo.priority,
+    status = previousTodo.status,
+  } = request.body;
 
   const updateTodoQuery = `
-  UPDATE todo 
-  SET 
-  todo = '${todo}',
-  priority = '${priority},
-  status = '${status}'
-  WHERE id = ${todoId};`;
-  await db.run(updateTodoQuery);
-  response.send(`${updateColumn} updated`);
+    UPDATE
+      todo
+    SET
+      todo='${todo}',
+      priority='${priority}',
+      status='${status}'
+    WHERE
+      id = ${todoId};`;
+
+  await database.run(updateTodoQuery);
+  response.send(`${updateColumn} Updated`);
 });
 
 app.delete("/todos/:todoId/", async (request, response) => {
   const { todoId } = request.params;
-  const deleteTodoQuery = ` DELETE * FROM todo WHERE id = ${todoId};`;
+  const deleteTodoQuery = ` DELETE FROM todo WHERE id = ${todoId};`;
   await db.run(deleteTodoQuery);
   response.send("Todo Deleted");
 });
